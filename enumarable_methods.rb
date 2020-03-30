@@ -48,6 +48,17 @@ module Enumerable
     end
     true_flag
   end
+
+  def my_none?
+    return to_enum unless block_given?
+
+    none_flag = true
+    my_each do |val|
+      none_flag = false if yield(val)
+    end
+    none_flag
+  end
+end
 end
 
 t_array = Array.new(10) { rand(1..20) }
@@ -65,6 +76,35 @@ mine = t_array.my_any? { |item| item > 19 }
 
 puts 'My emum: '
 p mine
+
+################# Testing none?
+# puts 'Default: '
+# puts %w[ant bear cat].none? { |word| word.length < 5 }
+
+# puts 'My emum: '
+# puts %w[ant bear cat].my_none? { |word| word.length < 5 }
+
+# default = t_array.none? { |item| item > 19 }
+
+# puts 'Default: '
+# p default
+
+# mine = t_array.my_none? { |item| item > 19 }
+
+# puts 'My emum: '
+# p mine
+
+################# Testing any?
+
+# default = t_array.any? { |item| item > 19 }
+
+# puts 'default: '
+# p default
+
+# mine = t_array.my_any?
+
+# puts 'My emum: '
+# p mine
 
 ################# Testing all?
 
