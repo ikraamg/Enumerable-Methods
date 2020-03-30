@@ -30,7 +30,7 @@ module Enumerable
   end
 
   def my_all?
-    return to_emum unless block_given?
+    return to_enum unless block_given?
 
     true_flag = true
     my_each do |val|
@@ -40,7 +40,7 @@ module Enumerable
   end
 
   def my_any?
-    return to_emum unless block_given?
+    return to_enum unless block_given?
 
     true_flag = false
     my_each do |val|
@@ -58,21 +58,37 @@ module Enumerable
     end
     none_flag
   end
-end
+
+  def my_count(arg = nil)
+    count = 0
+    if block_given?
+      my_each do |val|
+        count += 1 if yield(val)
+      end
+      count
+    elsif arg.nil?
+      length
+    else
+      my_each do |val|
+        count += 1 if val == arg
+      end
+      count
+    end
+  end
 end
 
 t_array = Array.new(10) { rand(1..20) }
 print 'original: '
 p t_array
 
-################# Testing any?
+################# Testing count?
 
-default = t_array.any? { |item| item > 19 }
+default = t_array.count
 
 puts 'default: '
 p default
 
-mine = t_array.my_any? { |item| item > 19 }
+mine = t_array.my_count
 
 puts 'My emum: '
 p mine
