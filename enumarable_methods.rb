@@ -1,11 +1,17 @@
 module Enumerable
   def my_each
-    each do |val|
-      yield(val)
+    return to_enum unless block_given?
+
+    i = 0
+    while i <= length - 1
+      yield(self[i])
+      i += 1
     end
   end
 
   def my_each_with_index
+    return to_enum unless block_given?
+
     i = 0
     while i <= length - 1
       yield(self[i], i)
@@ -14,12 +20,34 @@ module Enumerable
   end
 
   def my_select
+    return to_enum unless block_given?
+
     output_arr = []
     my_each do |val|
-      criteria = yield(val)
-      output_arr.push(val) if criteria
+      output_arr.push(val) if yield(val)
     end
     output_arr
+  end
+
+  def my_all?
+    return to_emum unless block_given?
+
+    true_flag = true
+    my_each do |val|
+      true_flag = false unless yield(val)
+    end
+    true_flag
+  end
+
+
+  def my_any?
+    return to_emum unless block_given?
+
+    true_flag = false
+    my_each do |val|
+      true_flag = true if yield(val)
+    end
+    true_flag
   end
 end
 
@@ -27,17 +55,47 @@ t_array = Array.new(10) { rand(1..20) }
 print 'original: '
 p t_array
 
-################# Testing select
 
-default = t_array.select(&:even?)
+################# Testing any?
+
+default = t_array.any? { |item| item > 19 }
 
 puts 'default: '
 p default
 
-mine = t_array.my_select(&:even?)
+mine = t_array.my_any? { |item| item > 19 }
 
-puts 'mine: '
+puts 'My emum: '
 p mine
+
+
+
+
+
+
+################# Testing all?
+
+# default = t_array.all? { |item| item > 1 }
+
+# puts 'default: '
+# p default
+
+# mine = t_array.my_all? { |item| item > 1 }
+
+# puts 'My emum: '
+# p mine
+
+################# Testing select
+
+# default = t_array.select(&:odd?)
+
+# puts 'default: '
+# p default
+
+# mine = t_array.my_select(&:odd?)
+
+# puts 'mine: '
+# p mine
 
 ################## Testing each
 
