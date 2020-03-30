@@ -39,7 +39,6 @@ module Enumerable
     true_flag
   end
 
-
   def my_any?
     return to_emum unless block_given?
 
@@ -55,7 +54,6 @@ t_array = Array.new(10) { rand(1..20) }
 print 'original: '
 p t_array
 
-
 ################# Testing any?
 
 default = t_array.any? { |item| item > 19 }
@@ -67,11 +65,6 @@ mine = t_array.my_any? { |item| item > 19 }
 
 puts 'My emum: '
 p mine
-
-
-
-
-
 
 ################# Testing all?
 
