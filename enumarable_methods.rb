@@ -1,5 +1,5 @@
 module Enumerable
-  # rubocop: disable Style/CaseEquality
+  # rubocop: disable Style/CaseEquality, Style/IfInsideElse
 
   def my_each
     return to_enum unless block_given?
@@ -59,24 +59,18 @@ module Enumerable
     any_matched
   end
 
-  # def my_any?
-  #   return to_enum unless block_given?
-
-  #   true_flag = false
-  #   my_each do |val|
-  #     true_flag = true if yield(val)
-  #   end
-  #   true_flag
-  # end
-
-  def my_none?
-    return to_enum unless block_given?
-
-    none_flag = true
+  def my_none?(arg = nil)
+    none_matched = true
     my_each do |val|
-      none_flag = false if yield(val)
+      if block_given?
+        none_matched = false if yield(val)
+      elsif arg.nil?
+        none_matched = false if val
+      else
+        none_matched = false if arg === val
+      end
     end
-    none_flag
+    none_matched
   end
 
   def my_count(arg = nil)
@@ -95,8 +89,30 @@ module Enumerable
       count
     end
   end
-  # rubocop: enable Style/CaseEquality
+  # rubocop: enable Style/CaseEquality, Style/IfInsideElse
 end
+
+# # # #Testing .my_none?
+# puts 'Original: '
+# puts %w[ant bear cat].none? { |word| word.length == 5 } #=> true
+# puts %w[ant bear cat].none? { |word| word.length >= 4 } #=> false
+# puts %w[ant bear cat].none?(/d/) #=> true
+# puts [1, 3.14, 42].none?(Float) #=> false
+# puts [].none? #=> true
+# puts [nil].none? #=> true
+# puts [nil, false].none? #=> true
+# puts [nil, false, true].none? #=> false
+
+# puts "\n\nNow Mine: "
+
+# puts %w[ant bear cat].my_none? { |word| word.length == 5 } #=> true
+# puts %w[ant bear cat].my_none? { |word| word.length >= 4 } #=> false
+# puts %w[ant bear cat].my_none?(/d/) #=> true
+# puts [1, 3.14, 42].my_none?(Float) #=> false
+# puts [].my_none? #=> true
+# puts [nil].my_none? #=> true
+# puts [nil, false].my_none? #=> true
+# puts [nil, false, true].my_none? #=> false
 
 # # #Testing .my_any?
 # puts 'Original: '
@@ -138,15 +154,18 @@ end
 
 ################# Testing count?
 
-# default = t_array.count
-
-# puts 'default: '
-# p default
-
-# mine = t_array.my_count
+# puts 'Default: '
+# puts ary = [1, 2, 4, 2]
+# puts ary.count #=> 4
+# puts ary.count(2) #=> 2
+# puts ary.count(&:even?) #=> 3
 
 # puts 'My emum: '
-# p mine
+
+# puts ary = [1, 2, 4, 2]
+# puts ary.my_count #=> 4
+# puts ary.my_count(2) #=> 2
+# puts ary.my_count(&:even?) #=> 3
 
 ################# Testing none?
 # puts 'Default: '
