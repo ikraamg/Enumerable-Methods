@@ -89,8 +89,30 @@ module Enumerable
       count
     end
   end
+
+  def my_map
+    return to_enum unless block_given?
+
+    output_arr = []
+    my_each do |val|
+      output_arr.push(yield(val))
+    end
+    output_arr
+  end
+
   # rubocop: enable Style/CaseEquality, Style/IfInsideElse
 end
+
+# ## Testing .my_map
+
+# puts 'Original: '
+# p (1..4).map { |i| i * i } #=> [1, 4, 9, 16]
+# p (1..4).map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
+
+# puts "\n\nNow Mine: "
+
+# p (1..4).map { |i| i * i } #=> [1, 4, 9, 16]
+# p (1..4).map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
 
 # # # #Testing .my_none?
 # puts 'Original: '
