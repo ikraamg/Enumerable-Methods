@@ -1,4 +1,6 @@
 module Enumerable
+  # rubocop: disable Style/CaseEquality
+
   def my_each
     return to_enum unless block_given?
 
@@ -29,25 +31,43 @@ module Enumerable
     output_arr
   end
 
-  def my_all?
-    return to_enum unless block_given?
-
-    true_flag = true
+  def my_all?(arg = nil)
+    all_matched = true
     my_each do |val|
-      true_flag = false unless yield(val)
+      if block_given?
+        all_matched = false unless yield(val)
+      elsif arg.nil?
+        all_matched = false unless val
+      else
+        all_matched = false unless arg === val
+      end
     end
-    true_flag
+    all_matched
   end
 
-  def my_any?
-    return to_enum unless block_given?
-
-    true_flag = false
+  def my_any?(arg = nil)
+    any_matched = false
     my_each do |val|
-      true_flag = true if yield(val)
+      if block_given?
+        any_matched = true if yield(val)
+      elsif arg.nil?
+        any_matched = true if val
+      else
+        any_matched = true if arg === val
+      end
     end
-    true_flag
+    any_matched
   end
+
+  # def my_any?
+  #   return to_enum unless block_given?
+
+  #   true_flag = false
+  #   my_each do |val|
+  #     true_flag = true if yield(val)
+  #   end
+  #   true_flag
+  # end
 
   def my_none?
     return to_enum unless block_given?
@@ -75,23 +95,58 @@ module Enumerable
       count
     end
   end
+  # rubocop: enable Style/CaseEquality
 end
 
-t_array = Array.new(10) { rand(1..20) }
-print 'original: '
-p t_array
+# # #Testing .my_any?
+# puts 'Original: '
+# puts %w[ant bear cat].any? { |word| word.length >= 3 } #=> true
+# puts %w[ant bear cat].any? { |word| word.length >= 4 } #=> true
+# puts %w[ant bear cat].any?(/d/) #=> false
+# puts [nil, true, 99].any?(Integer) #=> true
+# puts [nil, true, 99].any? #=> true
+# puts [].any? #=> false
+
+# puts "\n\nNow Mine: "
+# puts %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
+# puts %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
+# puts %w[ant bear cat].my_any?(/d/) #=> false
+# puts [nil, true, 99].my_any?(Integer) #=> true
+# puts [nil, true, 99].my_any? #=> true
+# puts [].my_any? #=> false
+
+# ##Testing .my_all?
+# puts 'Original: '
+# puts %w[ant bear cat].all? { |word| word.length >= 3 } #=> true
+# puts %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
+# puts %w[ant bear cat].all?(/t/) #=> false
+# puts [1, 2i, 3.14].all?(Numeric) #=> true
+# puts [nil, true, 99].all? #=> false
+# puts [].all? #=> true
+
+# puts "\n\nNow Mine: "
+# puts %w[ant bear cat].my_all? { |word| word.length >= 3 } #=> true
+# puts %w[ant bear cat].my_all? { |word| word.length >= 4 } #=> false
+# puts %w[ant bear cat].my_all?(/t/) #=> false
+# puts [1, 2i, 3.14].my_all?(Numeric) #=> true
+# puts [nil, true, 99].my_all? #=> false
+# puts [].my_all?
+
+# t_array = Array.new(10) { rand(1..20) }
+# print 'original: '
+# p t_array
 
 ################# Testing count?
 
-default = t_array.count
+# default = t_array.count
 
-puts 'default: '
-p default
+# puts 'default: '
+# p default
 
-mine = t_array.my_count
+# mine = t_array.my_count
 
-puts 'My emum: '
-p mine
+# puts 'My emum: '
+# p mine
 
 ################# Testing none?
 # puts 'Default: '
