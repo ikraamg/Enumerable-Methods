@@ -1,5 +1,4 @@
-# rubocop: disable Metrics/ModuleLength
-
+# rubocop: disable Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 module Enumerable
   def my_each
     return to_enum unless block_given?
@@ -31,7 +30,7 @@ module Enumerable
     output_arr
   end
 
-  # rubocop: disable Style/CaseEquality
+  # rubocop: disable Style/CaseEquality, Style/IfInsideElse
   def my_all?(arg = nil)
     all_matched = true
     my_each do |val|
@@ -45,8 +44,6 @@ module Enumerable
     end
     all_matched
   end
-
-  # rubocop: disable Style/IfInsideElse
 
   def my_any?(arg = nil)
     any_matched = false
@@ -94,26 +91,19 @@ module Enumerable
     end
   end
 
-  def my_map
-    return to_enum unless block_given?
+  def my_map(&arg)
+    return to_enum if arg.nil? && block_given? == false
 
     output_arr = []
     my_each do |val|
-      output_arr.push(yield(val))
+      if arg.nil? == false
+        output_arr.push(yield(val))
+      else
+        output_arr.push(arg.call(val))
+      end
     end
     output_arr
   end
-
-  def my_map_proc(&arg)
-    return to_enum if arg.nil?
-
-    output_arr = []
-    my_each do |val|
-      output_arr.push(arg.call(val))
-    end
-    output_arr
-  end
-  # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def my_inject(arg1 = nil, arg2 = nil)
     if block_given?
@@ -140,13 +130,13 @@ end
 
 # rubocop: enable Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-def multiply_els(arr)
-  arr.my_inject { |total, val| total * val }
-end
+# def multiply_els(arr)
+#   arr.my_inject { |total, val| total * val }
+# end
 
-puts multiply_els([2, 4, 5]) #=> 40
+# puts multiply_els([2, 4, 5]) #=> 40
 
-p (1..5).my_map_proc
+# p (1..5).my_map(&:to_s)
 # # Testing inject
 # puts 'Original: '
 # # Sum some numbers
