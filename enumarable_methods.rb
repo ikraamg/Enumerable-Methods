@@ -104,6 +104,15 @@ module Enumerable
     output_arr
   end
 
+  def my_map_proc(&arg)
+    return to_enum if arg.nil?
+
+    output_arr = []
+    my_each do |val|
+      output_arr.push(arg.call(val))
+    end
+    output_arr
+  end
   # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def my_inject(arg1 = nil, arg2 = nil)
@@ -137,6 +146,7 @@ end
 
 puts multiply_els([2, 4, 5]) #=> 40
 
+p (1..5).my_map_proc
 # # Testing inject
 # puts 'Original: '
 # # Sum some numbers
