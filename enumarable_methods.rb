@@ -91,15 +91,15 @@ module Enumerable
     end
   end
 
-  def my_map(&arg)
+  def my_map(arg = nil)
     return to_enum if arg.nil? && block_given? == false
 
     output_arr = []
     my_each do |val|
-      if arg.nil? == false
-        output_arr.push(yield(val))
-      else
+      if arg
         output_arr.push(arg.call(val))
+      else
+        output_arr.push(yield(val))
       end
     end
     output_arr
@@ -112,7 +112,7 @@ module Enumerable
       end
       arg1
 
-    elsif arg1.nil? == false
+    elsif arg1
       i = arg2.nil? ? 1 : 0
       total = arg2.nil? ? to_a[0] : arg1
       operator = arg2.nil? ? arg1 : arg2
