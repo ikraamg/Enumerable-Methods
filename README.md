@@ -47,7 +47,6 @@ OR:
 - Open enumarable_methods.rb in your local enviroment and run this code:
 
 ``` Ruby
-
 def my_test
 
 puts "All test were taken from the Ruby docs page (where available) to ensure that my_enumerable works exactly the same as the original."
@@ -56,6 +55,29 @@ puts "\nTesting my_map:"
 p (1..5).my_map(&:to_s) #=> Accepting symbols: converted to strings
 p (1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
 p (1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
+test_proc = proc do |item|
+  "Proc"
+end
+
+puts
+puts 'Input to my_map is both a proc and block'
+output = (1..2).my_map(test_proc) do |x|
+  "Block"
+end
+print output
+puts
+puts
+puts 'Input to my_map is only a block'
+output = (1..2).my_map do |item|
+  "Block"
+end
+print output
+puts
+puts
+puts 'Input to my_map is only a proc'
+print (1..2).my_map(test_proc)
+puts
+
 
 ## Test for Inject via multiply_els method:
 puts "\n\nTest for Inject via multiply_els method:"
@@ -136,7 +158,7 @@ puts "\n\nTesting my_each_with_index?: "
 end
 ## => ,0:3,1:6,2:9,3:12,4:15
 
-# #Testing each
+##Testing each
 puts "\n\nTesting my_each?: "
 [1, 2, 3, 4, 5].my_each do |x|
   print x * 3
