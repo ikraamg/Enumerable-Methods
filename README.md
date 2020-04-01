@@ -16,7 +16,7 @@ The following methods were re-created and named with a ***my_*** prefis:
 - [x] .map
 - [x] .inject
 
-All test were taken from the Ruby [docs](https://ruby-doc.org/core-2.6.5/Enumerable.html) page (where available) to ensure that my_enumerable works exactly the same as the original.
+
 
 ## Built With
 
@@ -24,7 +24,7 @@ All test were taken from the Ruby [docs](https://ruby-doc.org/core-2.6.5/Enumera
 
 ## Live Demo with Tests
 
-*All test were taken from the Ruby docs page (where available) to ensure that "my_enumerables" works exactly the same as the original.*
+*All test were taken from the Ruby [docs](https://ruby-doc.org/core-2.6.5/Enumerable.html) page (where available) to ensure that my_enumerable works exactly the same as the original.*
 
 [Live Demo Link](https://repl.it/@iks007/EnumerablesTestBench)
 
