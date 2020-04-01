@@ -1,12 +1,12 @@
-# rubocop: disable Style/CaseEquality, Style/IfInsideElse, Metrics/ModuleLength,
+# rubocop: disable Metrics/ModuleLength
 
 module Enumerable
   def my_each
     return to_enum unless block_given?
 
     i = 0
-    while i <= length - 1
-      yield(self[i])
+    while i <= size - 1
+      yield(to_a[i])
       i += 1
     end
   end
@@ -15,8 +15,8 @@ module Enumerable
     return to_enum unless block_given?
 
     i = 0
-    while i <= length - 1
-      yield(self[i], i)
+    while i <= size - 1
+      yield(to_a[i], i)
       i += 1
     end
   end
@@ -31,6 +31,7 @@ module Enumerable
     output_arr
   end
 
+  # rubocop: disable Style/CaseEquality
   def my_all?(arg = nil)
     all_matched = true
     my_each do |val|
@@ -44,6 +45,8 @@ module Enumerable
     end
     all_matched
   end
+
+  # rubocop: disable Style/IfInsideElse
 
   def my_any?(arg = nil)
     any_matched = false
@@ -73,6 +76,7 @@ module Enumerable
     none_matched
   end
 
+  # rubocop: enable Style/CaseEquality, Style/IfInsideElse
   def my_count(arg = nil)
     count = 0
     if block_given?
@@ -100,42 +104,38 @@ module Enumerable
     output_arr
   end
 
+  # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
   def my_inject(arg1 = nil, arg2 = nil)
     if block_given?
       my_each do |item|
-        # print 'yield returns: '
-        arg1 = arg1.nil? ? self[0] : yield(arg1, item)
-        # p "this is round #{index} accum is now: #{arg1}"
+        arg1 = arg1.nil? ? to_a[0] : yield(arg1, item)
       end
       arg1
 
-    elsif arg2.nil? == false
-      i = 0
-      total = arg1
-      while i < length
-        total = self[i].send(arg2, total)
+    elsif arg1.nil? == false
+      i = arg2.nil? ? 1 : 0
+      total = arg2.nil? ? to_a[0] : arg1
+      operator = arg2.nil? ? arg1 : arg2
+
+      while i < size
+        total = to_a[i].send(operator, total)
         i += 1
       end
       total
-
-    elsif arg2.nil?
-      i = 0
-      total = 0
-      while i < length
-        total = self[i].send(arg1, total)
-        i += 1
-      end
-      total
-
     else
       to_enum
     end
   end
-
-  # rubocop: enable
 end
 
-# rubicop: enable Style/CaseEquality, Style/IfInsideElse
+# rubocop: enable Metrics/ModuleLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+def multiply_els(arr)
+  arr.my_inject { |total, val| total * val }
+end
+
+puts multiply_els([2, 4, 5]) #=> 40
 
 # # Testing inject
 # puts 'Original: '
@@ -155,14 +155,14 @@ end
 
 # puts "\n\nNow Mine: "
 # # # Sum some numbers
-# puts [5, 6, 7, 8, 9, 10].my_inject(:+) #=> 45
-# # # Same using a block and my_inject
-# puts [5, 6, 7, 8, 9, 10].my_inject { |sum, n| sum + n } #=> 45
-# # # Multiply some numbers
-# puts [5, 6, 7, 8, 9, 10].my_inject(1, :*) #=> 151200
-# # # Same using a block
-# puts [5, 6, 7, 8, 9, 10].my_inject(1) { |product, n| product * n } #=> 151200
-# # # # find the longest word
+# puts (5..10).my_inject(:+) #=> 45
+# # # # Same using a block and my_inject
+# puts (5..10).my_inject { |sum, n| sum + n } #=> 45
+# # # # Multiply some numbers
+# puts (5..10).my_inject(1, :*) #=> 151200
+# # # # Same using a block
+# puts (5..10).my_inject(1) { |product, n| product * n } #=> 151200
+# # # # # find the longest word
 # longest = %w[cat sheep bear].inject do |memo, word|
 #   memo.length > word.length ? memo : word
 # end
