@@ -2,17 +2,19 @@
 
 # Enumerable-Methods
 
-> One of the simpler ways of sorting a group of items in an array is bubble sort. We are re-creating this method in our project.
+> Fully grasping the fundementals of any language is essential to becoming an expert. This repositry contains some basic enumerable methods have been recreated and tested according to the ruby [documentation](https://ruby-doc.org/core-2.6.5/Enumerable.html).
 
-You will find two functions in our code:
+The following methods were re-created and named with a ***my_*** prefis:
 
-1. bubble_sort Function that sorts a given array of numbers.
-2. bubble_sort_by Function that sorts a given array of items. It accepts blocks that compares items in the array by using yield method and return value of the block.
-
-Both of them optimized with two optimizations:
-
-1. Decreasing number of iteration for each round.
-2. Swap check: break if not swapped.
+- [x] .each
+- [x] .each_with_index
+- [x] .select
+- [x] .all?
+- [x] .any?
+- [x] .none?
+- [x] .count
+- [x] .map
+- [x] .inject
 
 All test were taken from the Ruby [docs](https://ruby-doc.org/core-2.6.5/Enumerable.html) page (where available) to ensure that my_enumerable works exactly the same as the original.
 
@@ -33,7 +35,7 @@ To get a local copy up and running follow these steps:
 ### Prerequisites
 
 - Ruby installed on local machine
-- A browser (for usage or repl.it)
+- A browser (for usage of repl.it)
 
 ### Usage
 
